@@ -623,3 +623,4 @@ class OPM500():
         if self._device is not None:
             self._device.close()
             self._device = None
+        self.__init__()

@@ -253,11 +253,6 @@ class OPM500():
                 while not msg.endswith(b'\r'): # append buffer until '\r' is found
                     msg = msg + self._device.read(self._device.getQueueStatus())
 
-                if "DET ERR" in msg.decode(errors="ignore"):
-                    raise Exception("No detector connected!")
-                elif "PWR ERR" in msg.decode(errors="ignore"):
-                    raise Exception("OPM doesn't get enough power!")
-                
                 return msg.decode(errors="ignore").replace("\r", '').strip()
             sleep(0.01)
             i += 1

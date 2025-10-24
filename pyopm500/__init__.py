@@ -531,7 +531,6 @@ class OPM500():
         #    if gain 5: amplitude / 12.285
         # 2. If the value in percent is above 90 and the set gain level is greater than 1, set the new gain to gain - 1.
         #    If the value in percent is below 8 and the set gain level is lower than 5, set new gain to gain + 1
-        # 3. If the OPM500 is a 100 kHz unit, multiply the value in percent by 3
 
         if self._autogain_gain == 1:
             level = amplitude / 122.85

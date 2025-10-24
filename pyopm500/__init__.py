@@ -524,6 +524,7 @@ class OPM500():
         #    if gain 3: amplitude / 1.2285
         #    if gain 4: amplitude / 122.85
         #    if gain 5: amplitude / 12.285
+        #    if gain 5: amplitude / 1.2285
         # 2. If the value in percent is above 90 and the set gain level is greater than 1, set the new gain to gain - 1.
         #    If the value in percent is below 8 and the set gain level is lower than 5, set new gain to gain + 1
 

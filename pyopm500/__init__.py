@@ -113,6 +113,7 @@ class OPM500():
         self._bandwith: str = BANDWITH.KHZ_10.value
         self._autogain_gain: int = None
         self._gain: str = GAIN.X1.value
+        self._max_gain: int = len(self._gain_steps) - 1
         self._filter: float = 1.0
         self._aperture: float = 7.0
 
@@ -278,6 +279,10 @@ class OPM500():
 
         self._opm_detector_min_wavelength = int(regex_detector_min_wavelength) if regex_detector_min_wavelength != info else -1 # get detector min wavelength
         self._opm_detector_max_wavelength = int(regex_detector_max_wavelength) if regex_detector_max_wavelength != info else -1 # get detector max wavelength
+
+        if not self.opm_set_auto_zero_reset():
+            self.disconnect()
+            return False
     
         # set default values
         if not self.opm_set_wavelength(self._wavelength):
@@ -481,10 +486,12 @@ class OPM500():
         recv = self._opm_recv()
         if recv.count("Gain: ") > 0:
             self._initial_auto_zero = INITIAL_AUTO_ZERO.AUTO_ZERO.value
+            self._max_gain = int(recv[-1])
             sleep(0.2)
             return True
         elif recv.count("A OK") > 0:
             self._initial_auto_zero = INITIAL_AUTO_ZERO.AUTO_ZERO.value
+            self._max_gain = len(self._gain_steps) - 1
             sleep(0.5)
             return True
         return False
@@ -495,6 +502,7 @@ class OPM500():
         recv = self._opm_recv()
         if recv == "R OK":
             self._initial_auto_zero = INITIAL_AUTO_ZERO.AUTO_ZERO.value
+            self._max_gain = len(self._gain_steps) - 1
             sleep(0.05)
             return True
         return False
@@ -545,9 +553,9 @@ class OPM500():
             self._autogain_gain -= 1
             self.opm_set_gain(dict(zip(self._gain_steps.values(), self._gain_steps.keys()))["V{}".format(self._autogain_gain)]) # set new gain
             return self._opm_autogain(self.opm_get_single_raw_measure(), recursion + 1, 1) # return new measurement or re-adjust gain
-        elif level < 8.0 and self._autogain_gain < 5:
+        elif level < 8.0 and self._autogain_gain < self._max_gain:
             if last_operation == 1: # prevent jumping between to gain leves
-                recursion = 6
+                recursion = len(self._gain_steps)
             self._autogain_gain += 1
             self.opm_set_gain(dict(zip(self._gain_steps.values(), self._gain_steps.keys()))["V{}".format(self._autogain_gain)]) # set new gain
             return self._opm_autogain(self.opm_get_single_raw_measure(), recursion + 1, 2) # return new measurement or re-adjust gain

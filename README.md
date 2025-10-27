@@ -69,6 +69,8 @@ print("Detector max wavelength: {}".format(opm.opm_detector_max_wavelength))
 
 print("Device info:\n{}\n\n".format(opm.opm_get_info()))
 
+print("Polarity inverted: {}\n\n".format(opm.opm_is_polarity_inverted()))
+print("Initial auto zero: {}".format(opm.initial_auto_zero))
 print("Current bandwith: {}".format(opm.opm_get_bandwith()))
 print("Current wavelength: {}".format(opm.opm_get_wavelength()))
 print("Current gain: {}".format(opm.opm_get_gain()))

@@ -53,7 +53,8 @@ opm.opm_set_gain(GAIN.X1)
 opm.set_unit(UNITS.MICROAMPERE)
 
 # Print single measurement
-print(format(opm.opm_get_measurement(), '.8f'))
+measurement = opm.opm_get_measurement()
+print(f"{measurement[0]:.8f} {measurement[1]}")
 
 opm.disconnect()
 ```
